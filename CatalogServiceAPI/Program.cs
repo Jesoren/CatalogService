@@ -5,6 +5,21 @@ using Microsoft.Extensions.Options;
 
 var builder = WebApplication.CreateBuilder(args);
 
+var token = Environment.GetEnvironmentVariable("VAULT_TOKEN");
+Console.WriteLine($"VAULT_TOKEN sat til {token}");
+var endPoint = Environment.GetEnvironmentVariable("VaultEndPoint");
+Console.WriteLine($"VaultEndPoint sat til {endPoint}");
+// Hent ConnectionString fra Vault
+var vaultRepository = new VaultRepository(endPoint, token);
+var connectionString = await vaultRepository.GetSecretAsync("ConnectionString");
+Console.WriteLine($"ConnectionString er: {connectionString}");
+
+// Tilføj ConnectionString til konfigurationen
+builder.Configuration.AddInMemoryCollection(new[]
+{
+    new KeyValuePair<string, string>("MongoDbSettings:ConnectionString", connectionString)
+});
+
 builder.Services.Configure<MongoDbSettings>(
     builder.Configuration.GetSection("MongoDbSettings"));
 

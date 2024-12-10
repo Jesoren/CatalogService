@@ -36,46 +36,60 @@ DateOfCreation = DateTime.UtcNow,
 [HttpGet]
 public async Task<ActionResult<IEnumerable<Item>>> GetItems()
 {
+    _logger.LogInformation("GetItems called at {DT}", DateTime.UtcNow);
     var items = await _repository.GetAllAsync();
+    _logger.LogInformation("GetItems called successfully at {DT}", DateTime.UtcNow);
     return Ok(items);
 }
 
 [HttpGet("{id:length(24)}")]
 public async Task<ActionResult<Item>> GetItem(string id)
 {
+    _logger.LogInformation("GetItem by ID {id} called at {DT}", DateTime.UtcNow);
     var item = await _repository.GetByIdAsync(id);
     if (item == null)
+
+    _logger.LogWarning("GetItem by ID method failed at {DT}", id, DateTime.UtcNow);
         return NotFound();
 
+    _logger.LogInformation("GetItem method completed at {DT}", DateTime.UtcNow);
     return Ok(item);
 }
 
 [HttpPost]
 public async Task<IActionResult> CreateItem(Item newItem)
 {
+    _logger.LogInformation("CreateItem called at {DT}", newItem, DateTime.UtcNow);
     await _repository.CreateAsync(newItem);
+    _logger.LogInformation("CreateItem method completed successfully at {DT}", DateTime.UtcNow);
     return CreatedAtAction(nameof(GetItem), new { id = newItem.id }, newItem);
 }
 
 [HttpPut("{id:length(24)}")]
 public async Task<IActionResult> UpdateItem(string id, Item updatedItem)
 {
+    _logger.LogInformation("UpdateItem method called with ID {ID} at {DT}", id, DateTime.UtcNow);
     var existingItem = await _repository.GetByIdAsync(id);
     if (existingItem == null)
+    _logger.LogWarning("UpdateItem could not find an item with ID {ID} at {DT}", id, DateTime.UtcNow);
         return NotFound();
 
     await _repository.UpdateAsync(id, updatedItem);
+    _logger.LogInformation("UpdateItem method completed successfully at {DT}", DateTime.UtcNow);
     return NoContent();
 }
 
 [HttpDelete("{id:length(24)}")]
 public async Task<IActionResult> DeleteItem(string id)
 {
+    _logger.LogInformation("DeleteItem method called with ID {ID} at {DT}", id, DateTime.UtcNow);
     var existingItem = await _repository.GetByIdAsync(id);
     if (existingItem == null)
+    _logger.LogWarning("DeleteItem could not find an item with ID {ID} at {DT}", id, DateTime.UtcNow);
         return NotFound();
 
     await _repository.DeleteAsync(id);
+    _logger.LogInformation("DeleteItem method completed successfully at {DT}", DateTime.UtcNow);
     return NoContent();
 }
 

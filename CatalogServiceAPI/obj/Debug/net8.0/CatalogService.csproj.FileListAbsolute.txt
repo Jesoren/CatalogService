@@ -110,6 +110,7 @@ C:\Users\soren\Desktop\Auktionshus\CatalogService\CatalogServiceAPI\bin\Debug\ne
 C:\Users\soren\Desktop\Auktionshus\CatalogService\CatalogServiceAPI\bin\Debug\net8.0\Swashbuckle.AspNetCore.Swagger.dll
 C:\Users\soren\Desktop\Auktionshus\CatalogService\CatalogServiceAPI\bin\Debug\net8.0\Swashbuckle.AspNetCore.SwaggerGen.dll
 C:\Users\soren\Desktop\Auktionshus\CatalogService\CatalogServiceAPI\bin\Debug\net8.0\Swashbuckle.AspNetCore.SwaggerUI.dll
+C:\Users\soren\Desktop\Auktionshus\CatalogService\CatalogServiceAPI\bin\Debug\net8.0\VaultSharp.dll
 C:\Users\soren\Desktop\Auktionshus\CatalogService\CatalogServiceAPI\bin\Debug\net8.0\ZstdSharp.dll
 C:\Users\soren\Desktop\Auktionshus\CatalogService\CatalogServiceAPI\obj\Debug\net8.0\CatalogService.csproj.AssemblyReference.cache
 C:\Users\soren\Desktop\Auktionshus\CatalogService\CatalogServiceAPI\obj\Debug\net8.0\CatalogService.GeneratedMSBuildEditorConfig.editorconfig

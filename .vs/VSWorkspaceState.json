@@ -1,0 +1,11 @@
+{
+  "ExpandedNodes": [
+    "",
+    "\\CatalogServiceAPI",
+    "\\CatalogServiceAPI\\Controllers",
+    "\\CatalogServiceAPI\\Models",
+    "\\CatalogServiceAPI\\Repositories"
+  ],
+  "SelectedNode": "\\CatalogService.sln",
+  "PreviewInSolutionExplorer": false
+}
