@@ -1,15 +1,13 @@
 using Microsoft.AspNetCore.Mvc;
-using Models;
-using System.Linq;
+using CatalogService.Models;
 using System.Text.Json;
-using Microsoft.Extensions.Options; // Til IOptions<>
-using CatalogService.Configurations; // Til MongoDbSettings
 using CatalogService.Repositories;
+using MongoDB.Bson; // For at kunne bruge ObjectId
 
-namespace CatalogService.Controllers;
-
+namespace CatalogService.Controllers
+{
     [ApiController]
-    [Route("items")]
+    [Route("[controller]")]
     public class CatalogController : ControllerBase
     {
         private readonly MongoRepository<Item> _repository;
@@ -21,153 +19,180 @@ namespace CatalogService.Controllers;
             _logger = logger;
         }
 
-/* Testdata, et objekt af Item i en liste.
-    private static List<Item> _items = new List<Item>() {
-new () {
-Id = new Guid("3fa85f64-5717-4562-b3fc-2c963f66afa6"),
-Name = "Carlsberg bil",
-Description = "Flot og velholdt samleobjekt, årgang 1874",
-StartPrice = 12000,
-MinimumPrice = 10000,
-DateOfCreation = DateTime.UtcNow,
-}
-};*/
+        [HttpGet]
+        public async Task<ActionResult<IEnumerable<Item>>> GetItems()
+        {
+            _logger.LogInformation("GetItems called to retrieve all items.");
+            try
+            {
+                var items = await _repository.GetAllAsync();
+                _logger.LogInformation("Successfully retrieved {ItemCount} items.", items.Count());
+                return Ok(items);
+            }
+            catch (NullReferenceException ex)
+            {
+                _logger.LogError(ex, "Failed to retrieve items: Repository returned null.");
+                return StatusCode(StatusCodes.Status500InternalServerError, "The data source returned no items.");
+            }
+            catch (TimeoutException ex)
+            {
+                _logger.LogError(ex, "Failed to retrieve items: The operation timed out.");
+                return StatusCode(StatusCodes.Status504GatewayTimeout, "The request timed out while retrieving items.");
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "An unexpected error occurred while retrieving items: {Message}", ex.Message);
+                return StatusCode(StatusCodes.Status500InternalServerError, "An unexpected error occurred.");
+            }
+        }
 
-[HttpGet]
-public async Task<ActionResult<IEnumerable<Item>>> GetItems()
-{
-    _logger.LogInformation("GetItems called at {DT}", DateTime.UtcNow);
-    var items = await _repository.GetAllAsync();
-    _logger.LogInformation("GetItems called successfully at {DT}", DateTime.UtcNow);
-    return Ok(items);
-}
+        [HttpGet("{id}")]
+        public async Task<ActionResult<Item>> GetItem(string id)
+        {
+            _logger.LogInformation("GetItem by ID {id} called to retrieve an item.", id);
 
-[HttpGet("{id:length(24)}")]
-public async Task<ActionResult<Item>> GetItem(string id)
-{
-    _logger.LogInformation("GetItem by ID {id} called at {DT}", DateTime.UtcNow);
-    var item = await _repository.GetByIdAsync(id);
-    if (item == null)
+            try
+            {
+                // Validér ID-format
+                if (!ObjectId.TryParse(id, out ObjectId objectId))
+                {
+                    _logger.LogWarning("Invalid ID format: {id}.", id);
+                    return BadRequest("Invalid ID format.");
+                }
 
-    _logger.LogWarning("GetItem by ID method failed at {DT}", id, DateTime.UtcNow);
-        return NotFound();
+                // Forsøg at hente objektet
+                var item = await _repository.GetByIdAsync(objectId);
 
-    _logger.LogInformation("GetItem method completed at {DT}", DateTime.UtcNow);
-    return Ok(item);
-}
+                if (item == null)
+                {
+                    _logger.LogWarning("Item not found for ID: {id}.", id);
+                    return NotFound($"Item with ID {id} was not found.");
+                }
 
-[HttpPost]
-public async Task<IActionResult> CreateItem(Item newItem)
-{
-    _logger.LogInformation("CreateItem called at {DT}", newItem, DateTime.UtcNow);
-    await _repository.CreateAsync(newItem);
-    _logger.LogInformation("CreateItem method completed successfully at {DT}", DateTime.UtcNow);
-    return CreatedAtAction(nameof(GetItem), new { id = newItem.id }, newItem);
-}
+                _logger.LogInformation("Successfully retrieved item with ID: {Id}.", id);
+                return Ok(item);
+            }
+            catch (TimeoutException ex)
+            {
+                _logger.LogError(ex, "Timeout occurred while retrieving item with ID: {id}.", id);
+                return StatusCode(StatusCodes.Status504GatewayTimeout, "The request timed out while retrieving the item.");
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "An unexpected error occurred while retrieving item with ID: {id}.", id);
+                return StatusCode(StatusCodes.Status500InternalServerError, "An unexpected error occurred.");
+            }
+        }
 
-[HttpPut("{id:length(24)}")]
+        [HttpPost]
+        public async Task<IActionResult> CreateItem(Item newItem)
+        {
+            _logger.LogInformation("CreateItem called with item: {NewItem}", JsonSerializer.Serialize(newItem));
+
+            try
+            {
+                // Valider input
+                if (newItem == null)
+                {
+                    _logger.LogWarning("CreateItem failed: null value item created.");
+                    return BadRequest("Item cannot be null.");
+                }
+
+                if (string.IsNullOrWhiteSpace(newItem.Name)) // Antag at Item har en Name-egenskab
+                {
+                    _logger.LogWarning("CreateItem failed: Missing or not valid name for item.");
+                    return BadRequest("Item must have a valid name.");
+                }
+
+                // Opret item
+                await _repository.CreateAsync(newItem);
+                _logger.LogInformation("Item created successfully with ID: {ItemId}.", newItem.id);
+
+                return CreatedAtAction(nameof(GetItem), new { id = newItem.id }, newItem);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "An unexpected error occurred while creating item: {NewItem}.", JsonSerializer.Serialize(newItem));
+                return StatusCode(StatusCodes.Status500InternalServerError, "An unexpected error occurred.");
+            }
+        }
+
+[HttpPut("{id}")]
 public async Task<IActionResult> UpdateItem(string id, Item updatedItem)
 {
-    _logger.LogInformation("UpdateItem method called with ID {ID} at {DT}", id, DateTime.UtcNow);
-    var existingItem = await _repository.GetByIdAsync(id);
-    if (existingItem == null)
-    _logger.LogWarning("UpdateItem could not find an item with ID {ID} at {DT}", id, DateTime.UtcNow);
-        return NotFound();
-
-    await _repository.UpdateAsync(id, updatedItem);
-    _logger.LogInformation("UpdateItem method completed successfully at {DT}", DateTime.UtcNow);
-    return NoContent();
-}
-
-[HttpDelete("{id:length(24)}")]
-public async Task<IActionResult> DeleteItem(string id)
-{
-    _logger.LogInformation("DeleteItem method called with ID {ID} at {DT}", id, DateTime.UtcNow);
-    var existingItem = await _repository.GetByIdAsync(id);
-    if (existingItem == null)
-    _logger.LogWarning("DeleteItem could not find an item with ID {ID} at {DT}", id, DateTime.UtcNow);
-        return NotFound();
-
-    await _repository.DeleteAsync(id);
-    _logger.LogInformation("DeleteItem method completed successfully at {DT}", DateTime.UtcNow);
-    return NoContent();
-}
-
-   /* [HttpPost("{itemId}/bids", Name = "PlaceBid")]
-public async Task<IActionResult> PlaceBid(Guid itemId, [FromBody] Bid newBid)
-{
-    _logger.LogInformation("PlaceBid method called at {DT}", DateTime.UtcNow.ToLongTimeString());
-
-    // Find item baseret på itemId
-    var item = _items.FirstOrDefault(i => i.Id == itemId);
-
-    if (item == null)
-    {
-        _logger.LogInformation("Item with ID {ItemId} not found at {DT}", itemId, DateTime.UtcNow.ToLongTimeString());
-        return NotFound("Item not found");
-    }
-
-    if (newBid == null || newBid.Amount <= 0)
-    {
-        _logger.LogInformation("Invalid bid received at {DT}", DateTime.UtcNow.ToLongTimeString());
-        return BadRequest("Invalid bid");
-    }
-
-    // Valider bruger via UserService
-    using var httpClient = new HttpClient();
-    var userServiceUrl = $"http://userservice:8080/users/{newBid.UserId}";
-    HttpResponseMessage response;
+    _logger.LogInformation("UpdateItem method called with ID: {id} and data: {UpdatedItem}", id, JsonSerializer.Serialize(updatedItem));
 
     try
     {
-        response = await httpClient.GetAsync(userServiceUrl);
+        // Valider ID-format
+        if (!ObjectId.TryParse(id, out ObjectId objectId))
+        {
+            _logger.LogWarning("UpdateItem failed: Invalid ID format for ID: {id}.", id);
+            return BadRequest("Invalid ID format.");
+        }
+
+        // Tjek om elementet eksisterer
+        var existingItem = await _repository.GetByIdAsync(objectId);
+        if (existingItem == null)
+        {
+            _logger.LogWarning("UpdateItem failed: Item with ID {id} not found.", id);
+            return NotFound($"Item with ID {id} was not found.");
+        }
+
+        // Valider opdateret data
+        if (updatedItem == null || string.IsNullOrWhiteSpace(updatedItem.Name)) // Antag at Item har en Name-egenskab
+        {
+            _logger.LogWarning("UpdateItem failed: Invalid data provided for ID: {id}.", id);
+            return BadRequest("Updated item data is invalid.");
+        }
+
+        // Opdater elementet
+        await _repository.UpdateAsync(objectId, updatedItem);
+        _logger.LogInformation("UpdateItem completed successfully for ID: {id}.", id);
+
+        return NoContent();
     }
     catch (Exception ex)
     {
-        _logger.LogError(ex, "Error contacting UserService");
-        return StatusCode(500, "Unable to validate user due to an internal error");
+        _logger.LogError(ex, "An unexpected error occurred while updating item with ID: {id}.", id);
+        return StatusCode(StatusCodes.Status500InternalServerError, "An unexpected error occurred.");
     }
+}
 
-    if (!response.IsSuccessStatusCode)
-    {
-        _logger.LogInformation("User with ID {UserId} not found at {DT}", newBid.UserId, DateTime.UtcNow.ToLongTimeString());
-        return NotFound("User not found");
+
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteItem(string id)
+        {
+            _logger.LogInformation("DeleteItem method called with ID: {id}", id);
+
+            try
+            {
+                // Valider ID-format
+                if (!ObjectId.TryParse(id, out ObjectId objectId))
+                {
+                    _logger.LogWarning("DeleteItem failed: Invalid ID format for ID: {id}.", id);
+                    return BadRequest("Invalid ID format.");
+                }
+
+                // Tjek om elementet eksisterer
+                var existingItem = await _repository.GetByIdAsync(objectId);
+                if (existingItem == null)
+                {
+                    _logger.LogWarning("DeleteItem failed: Item with ID {id} not found.", id);
+                    return NotFound($"Item with ID {id} was not found.");
+                }
+
+                // Slet elementet
+                await _repository.DeleteAsync(objectId);
+                _logger.LogInformation("DeleteItem completed successfully for ID: {id}.", id);
+
+                return NoContent();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "An unexpected error occurred while deleting item with ID: {id}.", id);
+                return StatusCode(StatusCodes.Status500InternalServerError, "An unexpected error occurred.");
+            }
+        }
     }
-
-    // Parse JSON-data direkte
-    var userContent = await response.Content.ReadAsStringAsync();
-    using var jsonDoc = JsonDocument.Parse(userContent);
-    var root = jsonDoc.RootElement;
-
-        if (!root.TryGetProperty("name", out var nameElement))
-    {
-        _logger.LogInformation("Name property missing in user data for UserID {UserId} at {DT}", newBid.UserId, DateTime.UtcNow.ToLongTimeString());
-        return StatusCode(500, "Unable to retrieve user name");
-    }
-
-    var userName = nameElement.GetString();
-
-    // Tjek om buddet er mindst så højt som StartPrice
-    if (newBid.Amount < item.StartPrice)
-    {
-        _logger.LogInformation("Bid amount {Amount} is lower than StartPrice {StartPrice} at {DT}", newBid.Amount, item.StartPrice, DateTime.UtcNow.ToLongTimeString());
-        return BadRequest($"Bid must be at least as high as the starting price ({item.StartPrice})");
-    }
-
-    // Tjek om buddet er højere end det højeste eksisterende bud (hvis der er bud)
-    if (item.Bids.Count > 0 && newBid.Amount <= item.Bids.Max(b => b.Amount))
-    {
-        _logger.LogInformation("Bid amount {Amount} is lower than the current highest bid at {DT}", newBid.Amount, DateTime.UtcNow.ToLongTimeString());
-        return BadRequest("Bid must be higher than the current highest bid");
-    }
-
-    // Hvis validering er bestået, tilføj buddet
-    newBid.Id = Guid.NewGuid();
-    newBid.Timestamp = DateTime.UtcNow;
-    newBid.Name = userName; // Brug brugerens navn direkte fra JSON
-    item.Bids.Add(newBid);
-
-    _logger.LogInformation("Successfully placed bid at {DT}", DateTime.UtcNow.ToLongTimeString());
-    return Ok(newBid);
-}*/
 }

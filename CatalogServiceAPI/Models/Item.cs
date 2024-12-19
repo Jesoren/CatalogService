@@ -1,17 +1,17 @@
-namespace Models;
+namespace CatalogService.Models;
 using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
-
 
 public class Item 
 {
     [BsonId]
     [BsonRepresentationAttribute(BsonType.ObjectId)]
     public ObjectId id { get; set; }
-    public string? name { get; set; }
-    public string? description { get; set; }
-    public int? startPrice { get; set; }
-    public int? minimumPrice  { get; set; }
-    public DateTime dateOfCreation { get; set; }
-    public List<Bid> bids { get; set; } = new List<Bid>(); // Liste over bud
+    public string? Name { get; set; }
+    public string? Description { get; set; }
+    public int? StartPrice { get; set; }
+    public DateTime DateOfCreation { get; set; }
+    public DateTime EndDate { get; set; }
+    public double HighestBid { get; set; } = 0;
+    public ObjectId HighestBidder { get; set; }
 }

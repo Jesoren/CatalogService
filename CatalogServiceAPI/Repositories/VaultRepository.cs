@@ -2,9 +2,6 @@ using VaultSharp;
 using VaultSharp.V1.AuthMethods.Token;
 using VaultSharp.V1.AuthMethods;
 using VaultSharp.V1.Commons;
-using System;
-using System.Net.Http;
-using System.Threading.Tasks;
 
 namespace CatalogService.Repositories
 {

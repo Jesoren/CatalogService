@@ -21,12 +21,18 @@
     <PackageReference Include="Microsoft.Extensions.Options.ConfigurationExtensions" Version="9.0.0" />
     <PackageReference Include="MongoDB.Driver" Version="3.1.0" />
     <PackageReference Include="NLOg" Version="5.3.4" />
-    <PackageReference Include="NLog.Web.AspNetCore" Version="5.3.14" />
+    <PackageReference Include="NLog.Web.AspNetCore" Version="5.3.15" />
+    <PackageReference Include="RabbitMQ.Client" Version="7.0.0" />
+    <PackageReference Include="RabbitMQ.Stream.Client" Version="1.8.9" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.4.0" />
     <None Include="NLog.config">
     <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <PackageReference Include="System.Net.NameResolution" Version="4.3.0" />
     <PackageReference Include="VaultSharp" Version="1.17.5.1" />
+    <None Include="NLog.config">
+    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
 
   </ItemGroup>
 

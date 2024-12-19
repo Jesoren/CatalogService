@@ -1,10 +1,12 @@
-namespace Models;
+namespace CatalogService.Models;
+using MongoDB.Bson;
+using MongoDB.Bson.Serialization.Attributes;
 
 public class Bid
 {
-    public Guid Id { get; set; } // Unik ID for buddet
-    public Guid UserId { get; set; } // Referencer til brugeren, der afgiver buddet
-    public int Amount { get; set; } // Beløbet for buddet
-    public DateTime Timestamp { get; set; } // Tidspunkt for buddet
-    public string? Name { get; set; }
+    [BsonId]
+    [BsonRepresentationAttribute(BsonType.ObjectId)]
+    public string ItemId { get; set; } // Unik ID for buddet
+    public ObjectId BidderId { get; set; } // Referencer til brugeren, der afgiver buddet
+    public int BidAmount { get; set; } // Beløbet for buddet
 }

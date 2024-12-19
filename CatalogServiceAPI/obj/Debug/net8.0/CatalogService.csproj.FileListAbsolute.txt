@@ -105,6 +105,8 @@ C:\Users\soren\Desktop\Auktionshus\CatalogService\CatalogServiceAPI\bin\Debug\ne
 C:\Users\soren\Desktop\Auktionshus\CatalogService\CatalogServiceAPI\bin\Debug\net8.0\NLog.dll
 C:\Users\soren\Desktop\Auktionshus\CatalogService\CatalogServiceAPI\bin\Debug\net8.0\NLog.Extensions.Logging.dll
 C:\Users\soren\Desktop\Auktionshus\CatalogService\CatalogServiceAPI\bin\Debug\net8.0\NLog.Web.AspNetCore.dll
+C:\Users\soren\Desktop\Auktionshus\CatalogService\CatalogServiceAPI\bin\Debug\net8.0\RabbitMQ.Client.dll
+C:\Users\soren\Desktop\Auktionshus\CatalogService\CatalogServiceAPI\bin\Debug\net8.0\RabbitMQ.Stream.Client.dll
 C:\Users\soren\Desktop\Auktionshus\CatalogService\CatalogServiceAPI\bin\Debug\net8.0\SharpCompress.dll
 C:\Users\soren\Desktop\Auktionshus\CatalogService\CatalogServiceAPI\bin\Debug\net8.0\Snappier.dll
 C:\Users\soren\Desktop\Auktionshus\CatalogService\CatalogServiceAPI\bin\Debug\net8.0\Swashbuckle.AspNetCore.Swagger.dll

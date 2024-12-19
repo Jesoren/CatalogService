@@ -2,47 +2,85 @@ using CatalogService.Configurations;
 using CatalogService.Repositories;
 using MongoDB.Driver;
 using Microsoft.Extensions.Options;
+using NLog;
+using NLog.Web;
+using CatalogService.Services;
 
-var builder = WebApplication.CreateBuilder(args);
+    var logger = NLog.LogManager.Setup().LoadConfigurationFromAppSettings().GetCurrentClassLogger();
+    logger.Debug("Init main");
 
-var token = Environment.GetEnvironmentVariable("VAULT_TOKEN");
-Console.WriteLine($"VAULT_TOKEN sat til {token}");
-var endPoint = Environment.GetEnvironmentVariable("VaultEndPoint");
-Console.WriteLine($"VaultEndPoint sat til {endPoint}");
-// Hent ConnectionString fra Vault
-var vaultRepository = new VaultRepository(endPoint, token);
-var connectionString = await vaultRepository.GetSecretAsync("ConnectionString");
-Console.WriteLine($"ConnectionString er: {connectionString}");
+    try
+    {
+    var builder = WebApplication.CreateBuilder(args);
 
-// Tilføj ConnectionString til konfigurationen
-builder.Configuration.AddInMemoryCollection(new[]
-{
-    new KeyValuePair<string, string>("MongoDbSettings:ConnectionString", connectionString)
-});
+    // Hent miljøvariable
+    var token = Environment.GetEnvironmentVariable("VAULT_TOKEN");
+    if (string.IsNullOrEmpty(token))
+    {
+        throw new ApplicationException("VAULT_TOKEN er ikke sat som miljøvariabel.");
+    }
 
-builder.Services.Configure<MongoDbSettings>(
-    builder.Configuration.GetSection("MongoDbSettings"));
+    var endPoint = Environment.GetEnvironmentVariable("VaultEndPoint");
+    if (string.IsNullOrEmpty(endPoint))
+    {
+        throw new ApplicationException("VaultEndPoint er ikke sat som miljøvariabel.");
+    }
 
-builder.Services.AddSingleton<IMongoClient>(sp =>
-{
-    var settings = sp.GetRequiredService<IOptions<MongoDbSettings>>().Value;
-    return new MongoClient(settings.ConnectionString);
-});
+    Console.WriteLine($"VAULT_TOKEN sat til {token}");
+    Console.WriteLine($"VaultEndPoint sat til {endPoint}");
 
-builder.Services.AddScoped(typeof(MongoRepository<>)); // Registrer repository før controllerne
+    // Hent ConnectionString fra Vault
+    var vaultRepository = new VaultRepository(endPoint, token);
+    var connectionString = await vaultRepository.GetSecretAsync("ConnectionString");
+    if (string.IsNullOrEmpty(connectionString))
+    {
+        throw new ApplicationException("ConnectionString blev ikke fundet i Vault.");
+    }
+    Console.WriteLine($"ConnectionString er: {connectionString}");
 
-builder.Services.AddControllers();
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+    // Tilføj ConnectionString til konfigurationen
+    builder.Configuration.AddInMemoryCollection(new[]
+    {
+        new KeyValuePair<string, string>("MongoDbSettings:ConnectionString", connectionString)
+    });
 
-var app = builder.Build();
+    builder.Services.Configure<MongoDbSettings>(
+        builder.Configuration.GetSection("MongoDbSettings"));
 
-if (app.Environment.IsDevelopment())
-{
-    app.UseSwagger();
-    app.UseSwaggerUI();
-}
+    builder.Services.AddSingleton<IMongoClient>(sp =>
+    {
+        var settings = sp.GetRequiredService<IOptions<MongoDbSettings>>().Value;
+        return new MongoClient(settings.ConnectionString);
+    });
 
-app.UseAuthorization();
-app.MapControllers();
-app.Run();
+    builder.Services.AddScoped(typeof(MongoRepository<>)); // Registrer repository før controllerne
+    builder.Services.AddHostedService<RabbitMQReceiver>();
+    builder.Services.AddControllers();
+    builder.Services.AddEndpointsApiExplorer();
+    builder.Services.AddSwaggerGen();
+    builder.Logging.ClearProviders();
+    builder.Host.UseNLog();
+
+    var app = builder.Build();
+
+    if (app.Environment.IsDevelopment())
+    {
+        app.UseSwagger();
+        app.UseSwaggerUI();
+    }
+
+    app.UseAuthorization();
+    app.MapControllers();
+    app.Run();
+    }
+    catch (Exception ex)
+    {
+    // Log fejl og afslut programmet
+        logger.Error(ex, "Programmet stoppede på grund af en uventet fejl.");
+    throw;
+    }
+    finally
+    {
+    // Sørg for at rydde op i loggeren
+        NLog.LogManager.Shutdown();
+    }

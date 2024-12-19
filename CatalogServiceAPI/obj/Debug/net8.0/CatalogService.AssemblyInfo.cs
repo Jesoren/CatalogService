@@ -16,7 +16,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyDescriptionAttribute("\r\n      1.0.0 Updated with semantic versioning \r\n      0.9.0 Dockerfile Service A" +
     "dded to App\r\n    ")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.1.1")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+b96a0294d31d34a21ede7544aa25066787a1a75d")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+daca7bf858522383405ad3b88db47f0aaae73e60")]
 [assembly: System.Reflection.AssemblyProductAttribute("CatalogService")]
 [assembly: System.Reflection.AssemblyTitleAttribute("CatalogService")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.1.1")]

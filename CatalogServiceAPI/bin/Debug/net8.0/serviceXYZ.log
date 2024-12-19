@@ -1,0 +1,117 @@
+2024-12-11 09:27:36.3712|DEBUG|CatalogService.Program|Init main
+2024-12-11 09:27:36.4632|ERROR|CatalogService.Program|Programmet stoppede på grund af en uventet fejl.|System.ApplicationException: VAULT_TOKEN er ikke sat som miljøvariabel.
+   at Program.<Main>$(String[] args) in C:\Users\soren\Desktop\Auktionshus\CatalogService\CatalogServiceAPI\Program.cs:line 19
+2024-12-11 09:39:31.2763|DEBUG|CatalogService.Program|Init main
+2024-12-11 09:39:31.5688|ERROR|CatalogService.Program|Programmet stoppede på grund af en uventet fejl.|System.Net.Http.HttpRequestException: The SSL connection could not be established, see inner exception.
+ ---> System.Security.Authentication.AuthenticationException: Cannot determine the frame size or a corrupted frame was received.
+   at System.Net.Security.SslStream.GetFrameSize(ReadOnlySpan`1 buffer)
+   at System.Net.Security.SslStream.EnsureFullTlsFrameAsync[TIOAdapter](CancellationToken cancellationToken, Int32 estimatedSize)
+   at System.Runtime.CompilerServices.PoolingAsyncValueTaskMethodBuilder`1.StateMachineBox`1.System.Threading.Tasks.Sources.IValueTaskSource<TResult>.GetResult(Int16 token)
+   at System.Net.Security.SslStream.ReceiveHandshakeFrameAsync[TIOAdapter](CancellationToken cancellationToken)
+   at System.Net.Security.SslStream.ForceAuthenticationAsync[TIOAdapter](Boolean receiveFirst, Byte[] reAuthenticationData, CancellationToken cancellationToken)
+   at System.Net.Http.ConnectHelper.EstablishSslConnectionAsync(SslClientAuthenticationOptions sslOptions, HttpRequestMessage request, Boolean async, Stream stream, CancellationToken cancellationToken)
+   --- End of inner exception stack trace ---
+   at System.Net.Http.ConnectHelper.EstablishSslConnectionAsync(SslClientAuthenticationOptions sslOptions, HttpRequestMessage request, Boolean async, Stream stream, CancellationToken cancellationToken)
+   at System.Net.Http.HttpConnectionPool.ConnectAsync(HttpRequestMessage request, Boolean async, CancellationToken cancellationToken)
+   at System.Net.Http.HttpConnectionPool.CreateHttp11ConnectionAsync(HttpRequestMessage request, Boolean async, CancellationToken cancellationToken)
+   at System.Net.Http.HttpConnectionPool.AddHttp11ConnectionAsync(QueueItem queueItem)
+   at System.Threading.Tasks.TaskCompletionSourceWithCancellation`1.WaitWithCancellationAsync(CancellationToken cancellationToken)
+   at System.Net.Http.HttpConnectionPool.SendWithVersionDetectionAndRetryAsync(HttpRequestMessage request, Boolean async, Boolean doRequestAuth, CancellationToken cancellationToken)
+   at System.Net.Http.RedirectHandler.SendAsync(HttpRequestMessage request, Boolean async, CancellationToken cancellationToken)
+   at System.Net.Http.HttpClient.<SendAsync>g__Core|83_0(HttpRequestMessage request, HttpCompletionOption completionOption, CancellationTokenSource cts, Boolean disposeCts, CancellationTokenSource pendingRequestsCts, CancellationToken originalCancellationToken)
+   at VaultSharp.Core.Polymath.MakeRequestAsync[TResponse](String resourcePath, HttpMethod httpMethod, Object requestData, IDictionary`2 headers, Boolean rawResponse, Action`1 postResponseAction)
+   at VaultSharp.Core.Polymath.MakeVaultApiRequest[TResponse](String resourcePath, HttpMethod httpMethod, Object requestData, Boolean rawResponse, Action`1 postResponseAction, String wrapTimeToLive, Boolean unauthenticated)
+   at VaultSharp.Core.Polymath.MakeVaultApiRequest[TResponse](String mountPoint, String path, HttpMethod httpMethod, Object requestData, Boolean rawResponse, Action`1 postResponseAction, String wrapTimeToLive, Boolean unauthenticated)
+   at VaultSharp.V1.SecretsEngines.KeyValue.V2.KeyValueSecretsEngineV2Provider.ReadSecretAsync(String path, Nullable`1 version, String mountPoint, String wrapTimeToLive)
+   at CatalogService.Repositories.VaultRepository.GetSecretAsync(String secret) in C:\Users\soren\desktop\Auktionshus\CatalogService\CatalogServiceAPI\Repositories\VaultRepository.cs:line 45
+   at Program.<Main>$(String[] args) in C:\Users\soren\desktop\Auktionshus\CatalogService\CatalogServiceAPI\Program.cs:line 33
+2024-12-11 09:44:09.3045|DEBUG|CatalogService.Program|Init main
+2024-12-11 09:44:09.4667|ERROR|CatalogService.Program|Programmet stoppede på grund af en uventet fejl.|System.Net.Http.HttpRequestException: The SSL connection could not be established, see inner exception.
+ ---> System.Security.Authentication.AuthenticationException: Cannot determine the frame size or a corrupted frame was received.
+   at System.Net.Security.SslStream.GetFrameSize(ReadOnlySpan`1 buffer)
+   at System.Net.Security.SslStream.EnsureFullTlsFrameAsync[TIOAdapter](CancellationToken cancellationToken, Int32 estimatedSize)
+   at System.Runtime.CompilerServices.PoolingAsyncValueTaskMethodBuilder`1.StateMachineBox`1.System.Threading.Tasks.Sources.IValueTaskSource<TResult>.GetResult(Int16 token)
+   at System.Net.Security.SslStream.ReceiveHandshakeFrameAsync[TIOAdapter](CancellationToken cancellationToken)
+   at System.Net.Security.SslStream.ForceAuthenticationAsync[TIOAdapter](Boolean receiveFirst, Byte[] reAuthenticationData, CancellationToken cancellationToken)
+   at System.Net.Http.ConnectHelper.EstablishSslConnectionAsync(SslClientAuthenticationOptions sslOptions, HttpRequestMessage request, Boolean async, Stream stream, CancellationToken cancellationToken)
+   --- End of inner exception stack trace ---
+   at System.Net.Http.ConnectHelper.EstablishSslConnectionAsync(SslClientAuthenticationOptions sslOptions, HttpRequestMessage request, Boolean async, Stream stream, CancellationToken cancellationToken)
+   at System.Net.Http.HttpConnectionPool.ConnectAsync(HttpRequestMessage request, Boolean async, CancellationToken cancellationToken)
+   at System.Net.Http.HttpConnectionPool.CreateHttp11ConnectionAsync(HttpRequestMessage request, Boolean async, CancellationToken cancellationToken)
+   at System.Net.Http.HttpConnectionPool.AddHttp11ConnectionAsync(QueueItem queueItem)
+   at System.Threading.Tasks.TaskCompletionSourceWithCancellation`1.WaitWithCancellationAsync(CancellationToken cancellationToken)
+   at System.Net.Http.HttpConnectionPool.SendWithVersionDetectionAndRetryAsync(HttpRequestMessage request, Boolean async, Boolean doRequestAuth, CancellationToken cancellationToken)
+   at System.Net.Http.RedirectHandler.SendAsync(HttpRequestMessage request, Boolean async, CancellationToken cancellationToken)
+   at System.Net.Http.HttpClient.<SendAsync>g__Core|83_0(HttpRequestMessage request, HttpCompletionOption completionOption, CancellationTokenSource cts, Boolean disposeCts, CancellationTokenSource pendingRequestsCts, CancellationToken originalCancellationToken)
+   at VaultSharp.Core.Polymath.MakeRequestAsync[TResponse](String resourcePath, HttpMethod httpMethod, Object requestData, IDictionary`2 headers, Boolean rawResponse, Action`1 postResponseAction)
+   at VaultSharp.Core.Polymath.MakeVaultApiRequest[TResponse](String resourcePath, HttpMethod httpMethod, Object requestData, Boolean rawResponse, Action`1 postResponseAction, String wrapTimeToLive, Boolean unauthenticated)
+   at VaultSharp.Core.Polymath.MakeVaultApiRequest[TResponse](String mountPoint, String path, HttpMethod httpMethod, Object requestData, Boolean rawResponse, Action`1 postResponseAction, String wrapTimeToLive, Boolean unauthenticated)
+   at VaultSharp.V1.SecretsEngines.KeyValue.V2.KeyValueSecretsEngineV2Provider.ReadSecretAsync(String path, Nullable`1 version, String mountPoint, String wrapTimeToLive)
+   at CatalogService.Repositories.VaultRepository.GetSecretAsync(String secret) in C:\Users\soren\desktop\Auktionshus\CatalogService\CatalogServiceAPI\Repositories\VaultRepository.cs:line 45
+   at Program.<Main>$(String[] args) in C:\Users\soren\desktop\Auktionshus\CatalogService\CatalogServiceAPI\Program.cs:line 33
+2024-12-11 10:50:27.7662|DEBUG|CatalogService.Program|Init main
+2024-12-11 10:50:27.8804|ERROR|CatalogService.Program|Programmet stoppede på grund af en uventet fejl.|System.ApplicationException: VAULT_TOKEN er ikke sat som miljøvariabel.
+   at Program.<Main>$(String[] args) in C:\Users\soren\Desktop\Auktionshus\CatalogService\CatalogServiceAPI\Program.cs:line 19
+2024-12-11 10:50:38.4030|DEBUG|CatalogService.Program|Init main
+2024-12-11 10:50:38.4592|ERROR|CatalogService.Program|Programmet stoppede på grund af en uventet fejl.|System.ApplicationException: VAULT_TOKEN er ikke sat som miljøvariabel.
+   at Program.<Main>$(String[] args) in C:\Users\soren\Desktop\Auktionshus\CatalogService\CatalogServiceAPI\Program.cs:line 19
+2024-12-11 11:06:12.9670|DEBUG|CatalogService.Program|Init main
+2024-12-11 11:06:13.1398|ERROR|CatalogService.Program|Programmet stoppede på grund af en uventet fejl.|System.Net.Http.HttpRequestException: The SSL connection could not be established, see inner exception.
+ ---> System.Security.Authentication.AuthenticationException: Cannot determine the frame size or a corrupted frame was received.
+   at System.Net.Security.SslStream.GetFrameSize(ReadOnlySpan`1 buffer)
+   at System.Net.Security.SslStream.EnsureFullTlsFrameAsync[TIOAdapter](CancellationToken cancellationToken, Int32 estimatedSize)
+   at System.Runtime.CompilerServices.PoolingAsyncValueTaskMethodBuilder`1.StateMachineBox`1.System.Threading.Tasks.Sources.IValueTaskSource<TResult>.GetResult(Int16 token)
+   at System.Net.Security.SslStream.ReceiveHandshakeFrameAsync[TIOAdapter](CancellationToken cancellationToken)
+   at System.Net.Security.SslStream.ForceAuthenticationAsync[TIOAdapter](Boolean receiveFirst, Byte[] reAuthenticationData, CancellationToken cancellationToken)
+   at System.Net.Http.ConnectHelper.EstablishSslConnectionAsync(SslClientAuthenticationOptions sslOptions, HttpRequestMessage request, Boolean async, Stream stream, CancellationToken cancellationToken)
+   --- End of inner exception stack trace ---
+   at System.Net.Http.ConnectHelper.EstablishSslConnectionAsync(SslClientAuthenticationOptions sslOptions, HttpRequestMessage request, Boolean async, Stream stream, CancellationToken cancellationToken)
+   at System.Net.Http.HttpConnectionPool.ConnectAsync(HttpRequestMessage request, Boolean async, CancellationToken cancellationToken)
+   at System.Net.Http.HttpConnectionPool.CreateHttp11ConnectionAsync(HttpRequestMessage request, Boolean async, CancellationToken cancellationToken)
+   at System.Net.Http.HttpConnectionPool.AddHttp11ConnectionAsync(QueueItem queueItem)
+   at System.Threading.Tasks.TaskCompletionSourceWithCancellation`1.WaitWithCancellationAsync(CancellationToken cancellationToken)
+   at System.Net.Http.HttpConnectionPool.SendWithVersionDetectionAndRetryAsync(HttpRequestMessage request, Boolean async, Boolean doRequestAuth, CancellationToken cancellationToken)
+   at System.Net.Http.RedirectHandler.SendAsync(HttpRequestMessage request, Boolean async, CancellationToken cancellationToken)
+   at System.Net.Http.HttpClient.<SendAsync>g__Core|83_0(HttpRequestMessage request, HttpCompletionOption completionOption, CancellationTokenSource cts, Boolean disposeCts, CancellationTokenSource pendingRequestsCts, CancellationToken originalCancellationToken)
+   at VaultSharp.Core.Polymath.MakeRequestAsync[TResponse](String resourcePath, HttpMethod httpMethod, Object requestData, IDictionary`2 headers, Boolean rawResponse, Action`1 postResponseAction)
+   at VaultSharp.Core.Polymath.MakeVaultApiRequest[TResponse](String resourcePath, HttpMethod httpMethod, Object requestData, Boolean rawResponse, Action`1 postResponseAction, String wrapTimeToLive, Boolean unauthenticated)
+   at VaultSharp.Core.Polymath.MakeVaultApiRequest[TResponse](String mountPoint, String path, HttpMethod httpMethod, Object requestData, Boolean rawResponse, Action`1 postResponseAction, String wrapTimeToLive, Boolean unauthenticated)
+   at VaultSharp.V1.SecretsEngines.KeyValue.V2.KeyValueSecretsEngineV2Provider.ReadSecretAsync(String path, Nullable`1 version, String mountPoint, String wrapTimeToLive)
+   at CatalogService.Repositories.VaultRepository.GetSecretAsync(String secret) in C:\Users\soren\desktop\Auktionshus\CatalogService\CatalogServiceAPI\Repositories\VaultRepository.cs:line 45
+   at Program.<Main>$(String[] args) in C:\Users\soren\desktop\Auktionshus\CatalogService\CatalogServiceAPI\Program.cs:line 33
+2024-12-16 21:13:46.9744|DEBUG|CatalogService.Program|Init main
+2024-12-16 21:13:47.0677|ERROR|CatalogService.Program|Programmet stoppede på grund af en uventet fejl.|System.ApplicationException: VAULT_TOKEN er ikke sat som miljøvariabel.
+   at Program.<Main>$(String[] args) in C:\Users\soren\Desktop\Auktionshus\CatalogService\CatalogServiceAPI\Program.cs:line 19
+2024-12-16 21:20:30.5546|DEBUG|CatalogService.Program|Init main
+2024-12-16 21:20:31.2990|ERROR|CatalogService.Program|Programmet stoppede på grund af en uventet fejl.|System.Net.Http.HttpRequestException: The SSL connection could not be established, see inner exception.
+ ---> System.Security.Authentication.AuthenticationException: Cannot determine the frame size or a corrupted frame was received.
+   at System.Net.Security.SslStream.GetFrameSize(ReadOnlySpan`1 buffer)
+   at System.Net.Security.SslStream.EnsureFullTlsFrameAsync[TIOAdapter](CancellationToken cancellationToken, Int32 estimatedSize)
+   at System.Runtime.CompilerServices.PoolingAsyncValueTaskMethodBuilder`1.StateMachineBox`1.System.Threading.Tasks.Sources.IValueTaskSource<TResult>.GetResult(Int16 token)
+   at System.Net.Security.SslStream.ReceiveHandshakeFrameAsync[TIOAdapter](CancellationToken cancellationToken)
+   at System.Net.Security.SslStream.ForceAuthenticationAsync[TIOAdapter](Boolean receiveFirst, Byte[] reAuthenticationData, CancellationToken cancellationToken)
+   at System.Net.Http.ConnectHelper.EstablishSslConnectionAsync(SslClientAuthenticationOptions sslOptions, HttpRequestMessage request, Boolean async, Stream stream, CancellationToken cancellationToken)
+   --- End of inner exception stack trace ---
+   at System.Net.Http.ConnectHelper.EstablishSslConnectionAsync(SslClientAuthenticationOptions sslOptions, HttpRequestMessage request, Boolean async, Stream stream, CancellationToken cancellationToken)
+   at System.Net.Http.HttpConnectionPool.ConnectAsync(HttpRequestMessage request, Boolean async, CancellationToken cancellationToken)
+   at System.Net.Http.HttpConnectionPool.CreateHttp11ConnectionAsync(HttpRequestMessage request, Boolean async, CancellationToken cancellationToken)
+   at System.Net.Http.HttpConnectionPool.AddHttp11ConnectionAsync(QueueItem queueItem)
+   at System.Threading.Tasks.TaskCompletionSourceWithCancellation`1.WaitWithCancellationAsync(CancellationToken cancellationToken)
+   at System.Net.Http.HttpConnectionPool.SendWithVersionDetectionAndRetryAsync(HttpRequestMessage request, Boolean async, Boolean doRequestAuth, CancellationToken cancellationToken)
+   at System.Net.Http.RedirectHandler.SendAsync(HttpRequestMessage request, Boolean async, CancellationToken cancellationToken)
+   at System.Net.Http.HttpClient.<SendAsync>g__Core|83_0(HttpRequestMessage request, HttpCompletionOption completionOption, CancellationTokenSource cts, Boolean disposeCts, CancellationTokenSource pendingRequestsCts, CancellationToken originalCancellationToken)
+   at VaultSharp.Core.Polymath.MakeRequestAsync[TResponse](String resourcePath, HttpMethod httpMethod, Object requestData, IDictionary`2 headers, Boolean rawResponse, Action`1 postResponseAction)
+   at VaultSharp.Core.Polymath.MakeVaultApiRequest[TResponse](String resourcePath, HttpMethod httpMethod, Object requestData, Boolean rawResponse, Action`1 postResponseAction, String wrapTimeToLive, Boolean unauthenticated)
+   at VaultSharp.Core.Polymath.MakeVaultApiRequest[TResponse](String mountPoint, String path, HttpMethod httpMethod, Object requestData, Boolean rawResponse, Action`1 postResponseAction, String wrapTimeToLive, Boolean unauthenticated)
+   at VaultSharp.V1.SecretsEngines.KeyValue.V2.KeyValueSecretsEngineV2Provider.ReadSecretAsync(String path, Nullable`1 version, String mountPoint, String wrapTimeToLive)
+   at CatalogService.Repositories.VaultRepository.GetSecretAsync(String secret) in C:\Users\soren\desktop\Auktionshus\CatalogService\CatalogServiceAPI\Repositories\VaultRepository.cs:line 45
+   at Program.<Main>$(String[] args) in C:\Users\soren\desktop\Auktionshus\CatalogService\CatalogServiceAPI\Program.cs:line 33
+2024-12-16 21:21:08.3324|DEBUG|CatalogService.Program|Init main
+2024-12-16 21:21:08.4347|ERROR|CatalogService.Program|Programmet stoppede på grund af en uventet fejl.|System.NotSupportedException: The 'vaultendpoint' scheme is not supported.
+   at System.Net.Http.HttpClient.<SendAsync>g__Core|83_0(HttpRequestMessage request, HttpCompletionOption completionOption, CancellationTokenSource cts, Boolean disposeCts, CancellationTokenSource pendingRequestsCts, CancellationToken originalCancellationToken)
+   at VaultSharp.Core.Polymath.MakeRequestAsync[TResponse](String resourcePath, HttpMethod httpMethod, Object requestData, IDictionary`2 headers, Boolean rawResponse, Action`1 postResponseAction)
+   at VaultSharp.Core.Polymath.MakeVaultApiRequest[TResponse](String resourcePath, HttpMethod httpMethod, Object requestData, Boolean rawResponse, Action`1 postResponseAction, String wrapTimeToLive, Boolean unauthenticated)
+   at VaultSharp.Core.Polymath.MakeVaultApiRequest[TResponse](String mountPoint, String path, HttpMethod httpMethod, Object requestData, Boolean rawResponse, Action`1 postResponseAction, String wrapTimeToLive, Boolean unauthenticated)
+   at VaultSharp.V1.SecretsEngines.KeyValue.V2.KeyValueSecretsEngineV2Provider.ReadSecretAsync(String path, Nullable`1 version, String mountPoint, String wrapTimeToLive)
+   at CatalogService.Repositories.VaultRepository.GetSecretAsync(String secret) in C:\Users\soren\desktop\Auktionshus\CatalogService\CatalogServiceAPI\Repositories\VaultRepository.cs:line 45
+   at Program.<Main>$(String[] args) in C:\Users\soren\desktop\Auktionshus\CatalogService\CatalogServiceAPI\Program.cs:line 33
