@@ -1,7 +1,0 @@
-{
-  "scripts": {
-    "lint": "eslint .",
-    "test": "jest",
-    "coverage": "jest --coverage"
-  }
-}
