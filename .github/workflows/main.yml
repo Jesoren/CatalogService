@@ -23,9 +23,15 @@ jobs:
       with:
         node-version: '18'
 
-    # Install dependencies
+    # Install dependencies including eslint and jest
     - name: Install Dependencies
-      run: npm install
+      run: |
+        npm install
+        npm install --save-dev eslint jest
+
+    # Run Linter
+    - name: Run Linter
+      run: npm run lint
 
     # Run Tests
     - name: Run Tests
